@@ -5,7 +5,6 @@ const users = require('./MOCK_DATA.json')
 const port = 8000;
 
 app.use(express.urlencoded({extended:false}))
-
 app.get("/api/users",(req,res)=>{return res.json(users)})
 
 app.post("/api/users",(req,res)=>{
