@@ -76,6 +76,7 @@ app.get('/auth/callback', function(request, response) {
           session.sfdcAuth = payload;
 
           // Redirect to app main page
+          console.log("authentication success")
           return response.redirect('/index.html');
         }
     });
@@ -128,7 +129,7 @@ app.get('/auth/whoami', function(request, response) {
       return;
     }
     // Return user data
-    response.send(userData);
+    response.send(userData.display_name);
     return;
   });
 });
