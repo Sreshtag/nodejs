@@ -77,7 +77,7 @@ app.get('/auth/callback', function(request, response) {
 
           // Redirect to app main page
           console.log("authentication success")
-          return response.redirect('/index.html');
+          return response.redirect('/auth/whoami');
         }
     });
 });
@@ -129,33 +129,21 @@ app.get('/auth/whoami', function(request, response) {
       return;
     }
     // Return user data
-    response.send(userData.display_name);
+    const parsedData = JSON.parse(userData)
+    const html = `
+     <div>
+      <div>Domain Id : ${parsedData.id}</div>
+      <div>Username :${parsedData.username}</div>
+      <div>Username :${parsedData.username}</div>
+      <div>Email :${parsedData.email}</div>
+      <div>Organization Id${parsedData.organization_id}</div>
+     </div>
+     <li class="nav-item">
+            <a class="nav-link" href="/auth/logout">Log out</a>
+      </li>
+     `
+    response.send(html);
     return;
-  });
-});
-
-/**
-* Endpoint for publishing a platform event on Force.com
-*/
-app.post('/publish', function(request, response) {
-  var curSession = getSession(request, response, true);
-  if (curSession == null)
-    return;
-
-  var apiRequestOptions = sfdc.data.createDataRequest(curSession.sfdcAuth, 'sobjects/Notification__e');
-  apiRequestOptions.body = {"Message__c" : "Watch out, bear spotted!"};
-  apiRequestOptions.json = true;
-
-  httpClient.post(apiRequestOptions, function (error, payload) {
-    if (error) {
-      console.error('Force.com data API error: '+ JSON.stringify(error));
-      response.status(500).json(error);
-      return;
-    }
-    else {
-      response.send(payload.body);
-      return;
-    }
   });
 });
 
