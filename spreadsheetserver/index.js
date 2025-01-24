@@ -30,15 +30,6 @@ const oauth2 = new jsforce.OAuth2({
 });
 
 
-function getSession(req, res) {
-    const { session } = req;
-    if (session.sfdcAccessToken === undefined) {
-        res.status(401).send('Unauthorized');
-        return null;
-    }
-    return session;
-}
-
 app.use(
     session({
         secret: NODE_SESSION_SECRET_KEY,
@@ -66,8 +57,8 @@ app.get('/oauth2/callback',async(req, res) => {
   const userInfo = await conn.authorize(code)
   req.session.sfdcAccessToken = conn.accessToken;
   req.session.sfdcInstanceUrl = conn.instanceUrl;
-  //res.json({"Access Token : ":conn.accessToken,"Instance url: ":conn.instanceUrl,"User ID: " : userInfo.id,"Org ID: " :userInfo.organizationId});
-  res.send("Logged in as " + userInfo.id + " on instance "+conn.instanceUrl)
+  console.log({"Access Token : ":conn.accessToken,"Instance url: ":conn.instanceUrl,"User ID: " : userInfo.id,"Org ID: " :userInfo.organizationId});
+  res.redirect('/')
 });
 
 
